@@ -5,7 +5,7 @@ function catchResponce() {
     $('#repoSearchForm').submit(function( event ) {
         event.preventDefault();
         $( ".results" ).replaceWith(`
-    <section class="results"><ul></ul></section>`);
+    <section class="results"><p class="errorBlock"></p><ul></ul></section>`);
         let formInput = $( "input[type=text][name=gitHandle]" ).val();
         fetchData(formInput);
       });
@@ -20,18 +20,22 @@ function fetchData(formInput) {
           },
     })
     
-    .then(response => {
-        if (!response.ok) {
-            throw Error(error);
+    .then(res => {
+        if (!res.ok) {
+            return res.json().then(json => {
+                throw new Error(json.message);
+            });
         }
-        return response.json();
-      })
+    
+        return res.json();
+    })
       .then(responceJson => {
         printResults(responceJson, formInput)
       })
-      .catch(error => console.error());
-    console.log('FETCHER RAN, value:'+ formInput);
-    }
+      .catch(err => {
+        $('.errorBlock').replaceWith(`<p class="errorBlock">Something went wrong: ${err.message}</p>`);
+      });
+  }
 
 function printResults(responceJson, formInput) {
     responceJson.forEach(element => 
