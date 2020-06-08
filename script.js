@@ -27,15 +27,15 @@ function fetchData(formInput) {
         return response.json();
       })
       .then(responceJson => {
-        printResults(responceJson)
+        printResults(responceJson, formInput)
       })
       .catch(error => console.error());
     console.log('FETCHER RAN, value:'+ formInput);
     }
 
-function printResults(responceJson) {
+function printResults(responceJson, formInput) {
     responceJson.forEach(element => 
-        $( ".results>ul" ).append(`<li><a target="_blank" href="https://github.com/maksimsavi/${element.name}" >${element.name}</a></li>`)
+        $( ".results>ul" ).append(`<li><a target="_blank" href="https://github.com/${formInput}/${element.name}" >${element.name}</a></li>`)
         );
     console.log('GENERATOR RAN, json: '+ responceJson);
 }
